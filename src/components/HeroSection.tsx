@@ -1,5 +1,12 @@
 import { motion } from "framer-motion";
-import { Film, ChevronDown } from "lucide-react";
+import { Film, Search, Mic, ImageIcon } from "lucide-react";
+
+const tags = [
+  { icon: Film, label: "Video Editor" },
+  { icon: Search, label: "YouTube SEO" },
+  { icon: Mic, label: "Podcast Shorts Editor" },
+  { icon: ImageIcon, label: "Thumbnail Designer AI" },
+];
 import mogdhoPhoto from "@/assets/mogdho-photo.png";
 
 const HeroSection = () => {
