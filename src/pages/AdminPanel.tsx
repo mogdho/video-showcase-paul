@@ -318,14 +318,4 @@ const VideoList = ({
   </div>
 );
 
-type Video = {
-  id: string;
-  title: string;
-  description: string | null;
-  type: "reel" | "regular";
-  embed_url: string | null;
-  thumbnail_url: string | null;
-  sort_order: number;
-};
-
 export default AdminPanel;
