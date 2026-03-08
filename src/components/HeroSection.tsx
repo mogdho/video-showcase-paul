@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Film, Search, Mic, ImageIcon } from "lucide-react";
+import { Film, Search, Mic, ImageIcon, ChevronDown } from "lucide-react";
 
 const tags = [
   { icon: Film, label: "Video Editor" },
