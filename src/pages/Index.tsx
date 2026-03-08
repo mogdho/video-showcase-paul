@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import SkillsSection from "@/components/SkillsSection";
 import VideoGrid from "@/components/VideoGrid";
+import ReviewsSection from "@/components/ReviewsSection";
 import AboutSection from "@/components/AboutSection";
 import Footer from "@/components/Footer";
 import ParticleBackground from "@/components/ParticleBackground";
