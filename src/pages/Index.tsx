@@ -24,6 +24,7 @@ const Index = () => {
       <HeroSection />
       <SkillsSection />
       <VideoGrid />
+      <ReviewsSection />
       <AboutSection />
       <Footer />
     </div>
