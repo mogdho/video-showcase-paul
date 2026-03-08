@@ -29,7 +29,7 @@ const Navbar = () => {
         </a>
 
         <div className="hidden sm:flex items-center gap-8">
-          {links.map((link) => (
+          {links.filter(l => l.label !== "Contact").map((link) => (
             <a
               key={link.label}
               href={link.href}
@@ -38,6 +38,12 @@ const Navbar = () => {
               {link.label}
             </a>
           ))}
+          <a
+            href="#contact"
+            className="text-sm uppercase tracking-wider font-semibold px-5 py-2 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300"
+          >
+            Contact
+          </a>
         </div>
 
         <button
