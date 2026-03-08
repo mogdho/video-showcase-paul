@@ -1,77 +1,71 @@
 import { useState, useEffect } from "react";
-
-const LINES = [
-  { text: "Mogdho Paul", isName: true },
-  { text: "Engaging Video Editor", isName: false },
-  { text: "for you", isName: false },
-];
+import { motion, AnimatePresence } from "framer-motion";
 
 const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
-  const [displays, setDisplays] = useState(LINES.map(() => ""));
-  const [phase, setPhase] = useState<"typing" | "fadeout">("typing");
-  const [opacity, setOpacity] = useState(1);
+  const [phase, setPhase] = useState<"show" | "out">("show");
 
   useEffect(() => {
-    let frame = 0;
-    const totalChars = LINES.reduce((sum, l) => sum + l.text.length, 0);
-    let charIndex = 0;
-
-    const timer = setInterval(() => {
-      frame++;
-      charIndex++;
-
-      // Type out all lines sequentially
-      let remaining = charIndex;
-      const newDisplays = LINES.map((line) => {
-        if (remaining <= 0) return "";
-        const show = Math.min(remaining, line.text.length);
-        remaining -= show;
-        return line.text.slice(0, show);
-      });
-
-      setDisplays(newDisplays);
-
-      if (charIndex >= totalChars) {
-        clearInterval(timer);
-        setTimeout(() => {
-          setPhase("fadeout");
-          setOpacity(0);
-          setTimeout(onComplete, 600);
-        }, 500);
-      }
-    }, 45);
-
-    return () => clearInterval(timer);
+    const timer = setTimeout(() => {
+      setPhase("out");
+      setTimeout(onComplete, 800);
+    }, 1800);
+    return () => clearTimeout(timer);
   }, [onComplete]);
 
   return (
-    <div
-      className="fixed inset-0 z-[200] bg-background flex flex-col items-center justify-center transition-opacity duration-500"
-      style={{ opacity }}
-    >
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-primary/5 blur-[100px]" />
-
-      <div className="relative z-10 text-center space-y-2">
-        {LINES.map((line, i) => (
-          <div
-            key={i}
-            className={
-              line.isName
-                ? "font-display text-5xl sm:text-7xl tracking-widest text-gradient-gold"
-                : "text-lg sm:text-xl text-muted-foreground font-light tracking-wide"
-            }
+    <AnimatePresence>
+      {phase !== "out" ? null : null}
+      <motion.div
+        key="loader"
+        initial={{ opacity: 1 }}
+        animate={phase === "out" ? { opacity: 0 } : { opacity: 1 }}
+        transition={{ duration: 0.7, ease: "easeInOut" }}
+        className="fixed inset-0 z-[200] bg-background flex items-center justify-center"
+      >
+        <div className="relative flex flex-col items-center gap-6">
+          {/* Subtle pulsing ring */}
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="relative"
           >
-            {displays[i]}
-            {/* Show cursor at the end of the currently typing line */}
-            {phase === "typing" &&
-              displays[i].length > 0 &&
-              displays[i].length < line.text.length && (
-                <span className="inline-block w-[2px] h-[1em] bg-primary animate-pulse ml-0.5 align-middle" />
-              )}
-          </div>
-        ))}
-      </div>
-    </div>
+            <motion.div
+              animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.1, 0.3] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute inset-0 w-20 h-20 rounded-full border border-primary/30 -m-2"
+            />
+            <div className="w-16 h-16 rounded-full border border-primary/20 flex items-center justify-center">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                className="w-10 h-10 rounded-full border-t-2 border-r-2 border-primary/50"
+              />
+            </div>
+          </motion.div>
+
+          {/* Name */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="text-center"
+          >
+            <h1 className="font-display text-3xl sm:text-4xl tracking-widest text-gradient-gold">
+              Mogdho Paul
+            </h1>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.7 }}
+              className="text-sm text-muted-foreground mt-2 tracking-wide font-light"
+            >
+              Engaging Video Editor
+            </motion.p>
+          </motion.div>
+        </div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
