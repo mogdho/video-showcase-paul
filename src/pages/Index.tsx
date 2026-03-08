@@ -24,7 +24,7 @@ const Index = () => {
       <SkillsSection />
       <VideoGrid />
       <ReviewsSection />
-      <AboutSection />
+      <Footer />
       <Footer />
     </div>
   );
