@@ -44,9 +44,12 @@ const Footer = () => {
           ))}
         </div>
 
-        <p className="mt-8 text-sm text-muted-foreground">
+        <p className="mt-8 text-base text-muted-foreground">
           or email at{" "}
-          <a href="mailto:mogdhapal@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">
+          <a
+            href="mailto:mogdhapal@gmail.com"
+            className="text-gradient-gold font-display tracking-wider hover:opacity-80 transition-opacity underline underline-offset-4 decoration-primary/40"
+          >
             mogdhapal@gmail.com
           </a>
         </p>
