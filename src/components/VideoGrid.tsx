@@ -32,6 +32,7 @@ const VideoGrid = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
+              whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.25 } }}
               className="group relative aspect-video rounded-lg overflow-hidden bg-secondary border border-border hover:border-primary/40 transition-all duration-500 cursor-pointer"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-secondary to-card flex items-center justify-center">
