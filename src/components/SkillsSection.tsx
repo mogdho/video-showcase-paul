@@ -7,11 +7,11 @@ import iconPs from "@/assets/icon-ps.png";
 import iconAi from "@/assets/icon-ai.png";
 
 const skills = [
-  { name: "After Effects", level: 95, tier: "Expert", icon: iconAe },
-  { name: "Premiere Pro", level: 90, tier: "Expert", icon: iconPr },
-  { name: "VidIQ", level: 90, tier: "Expert", icon: iconVidiq },
-  { name: "Photoshop", level: 65, tier: "Moderate", icon: iconPs },
-  { name: "Illustrator", level: 60, tier: "Moderate", icon: iconAi },
+  { name: "After Effects", level: 95, tier: "Expert", icon: iconAe, desc: "Motion graphics, visual effects & compositing" },
+  { name: "Premiere Pro", level: 90, tier: "Expert", icon: iconPr, desc: "Precision cuts, sound design & color grading" },
+  { name: "VidIQ", level: 90, tier: "Expert", icon: iconVidiq, desc: "YouTube SEO, analytics & keyword optimization" },
+  { name: "Photoshop", level: 65, tier: "Moderate", icon: iconPs, desc: "Custom elements, thumbnails & photo retouching" },
+  { name: "Illustrator", level: 60, tier: "Moderate", icon: iconAi, desc: "Vector graphics, icons & design elements" },
 ];
 
 const SkillsSection = () => {
