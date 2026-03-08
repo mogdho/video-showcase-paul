@@ -39,6 +39,13 @@ const defaultReviews = [
   },
 ];
 
+const defaultAvatarMap: Record<string, string> = {
+  mewdreamer: clientMewdreamer,
+  joearias189: clientJoearias,
+  "Ella Perez": clientElla,
+  "Elsie Ross": clientElsie,
+};
+
 type ReviewData = {
   name: string;
   role: string;
