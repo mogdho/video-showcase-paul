@@ -54,7 +54,7 @@ const ReviewCard = ({ review, index }: { review: typeof reviews[0]; index: numbe
           className="w-10 h-10 rounded-full object-cover border border-border"
         />
         <div>
-          <h4 className="text-sm font-display tracking-wider text-foreground">{review.name}</h4>
+          <h4 className="text-sm font-display tracking-wider text-foreground blur-[3px] select-none hover:blur-none transition-all duration-300">{review.name}</h4>
           <p className="text-xs text-muted-foreground">{review.role}</p>
         </div>
       </div>
