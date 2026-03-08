@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 const skills = [
   { name: "After Effects", level: 95, tier: "Expert" },
   { name: "Premiere Pro", level: 90, tier: "Expert" },
+  { name: "Canva", level: 90, tier: "Expert" },
   { name: "Photoshop", level: 65, tier: "Moderate" },
   { name: "Illustrator", level: 60, tier: "Moderate" },
 ];
