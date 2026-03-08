@@ -60,13 +60,46 @@ const HeroSection = () => {
           className="flex-shrink-0"
         >
           <div className="relative">
-            {/* Glow behind photo */}
-            <div className="absolute inset-0 rounded-2xl bg-primary/10 blur-[40px] scale-110" />
-            <img
-              src={mogdhoPhoto}
-              alt="Mogdho Paul"
-              className="relative w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 rounded-2xl object-cover border-2 border-primary/20 shadow-2xl"
-            />
+            {/* Glow behind */}
+            <div className="absolute inset-0 rounded-md bg-primary/10 blur-[40px] scale-110" />
+
+            {/* Film frame */}
+            <div className="relative bg-card rounded-md overflow-hidden border border-border shadow-2xl">
+              {/* Top strip - film perforations */}
+              <div className="flex items-center justify-between px-3 py-1.5 bg-foreground/90">
+                <div className="flex gap-1.5">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <div key={`t-${i}`} className="w-2 h-3 rounded-sm bg-background/30" />
+                  ))}
+                </div>
+              </div>
+
+              {/* Photo */}
+              <div className="relative">
+                <img
+                  src={mogdhoPhoto}
+                  alt="Mogdho Paul"
+                  className="w-64 h-72 sm:w-72 sm:h-80 lg:w-80 lg:h-[22rem] object-cover"
+                />
+                {/* Film frame lines overlay */}
+                <div className="absolute inset-0 border-x-[3px] border-foreground/10" />
+                {/* Corner markers */}
+                <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-primary/60" />
+                <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-primary/60" />
+                <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-primary/60" />
+                <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-primary/60" />
+              </div>
+
+              {/* Bottom strip - film perforations */}
+              <div className="flex items-center justify-between px-3 py-1.5 bg-foreground/90">
+                <div className="flex gap-1.5">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <div key={`b-${i}`} className="w-2 h-3 rounded-sm bg-background/30" />
+                  ))}
+                </div>
+                <span className="text-[9px] text-background/40 font-mono tracking-wider">FRAME 01</span>
+              </div>
+            </div>
           </div>
         </motion.div>
       </div>
