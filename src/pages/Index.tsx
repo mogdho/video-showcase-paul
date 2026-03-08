@@ -8,6 +8,7 @@ import GrainOverlay from "@/components/GrainOverlay";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
+      <GrainOverlay />
       <Navbar />
       <HeroSection />
       <VideoGrid />
