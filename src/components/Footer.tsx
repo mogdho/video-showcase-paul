@@ -46,8 +46,8 @@ const Footer = () => {
 
         <p className="mt-8 text-sm text-muted-foreground">
           or email at{" "}
-          <a href="mailto:hello@shahfahadahmed.com" className="text-muted-foreground hover:text-primary transition-colors">
-            hello@shahfahadahmed.com
+          <a href="mailto:mogdhapal@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">
+            mogdhapal@gmail.com
           </a>
         </p>
 
