@@ -1,11 +1,13 @@
-import { Facebook, Instagram, Twitter } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 import { motion } from "framer-motion";
+import iconFacebook from "@/assets/icon-facebook.png";
+import iconInstagram from "@/assets/icon-instagram.png";
+import iconX from "@/assets/icon-x.png";
 
 const socials = [
-  { icon: Facebook, label: "Facebook", href: "#" },
-  { icon: Instagram, label: "Instagram", href: "#" },
-  { icon: Twitter, label: "Twitter", href: "#" },
+  { icon: iconFacebook, label: "Facebook", href: "#" },
+  { icon: iconInstagram, label: "Instagram", href: "#" },
+  { icon: iconX, label: "X", href: "#" },
 ];
 
 const Footer = () => {
@@ -33,11 +35,11 @@ const Footer = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: 0.2 + i * 0.1 }}
-              whileHover={{ scale: 1.2, y: -4, boxShadow: "0 0 20px hsl(40 85% 55% / 0.3)" }}
+              whileHover={{ scale: 1.2, y: -4 }}
               whileTap={{ scale: 0.9 }}
-              className="w-12 h-12 rounded-full border border-border bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/40 transition-all duration-300"
+              className="w-12 h-12 rounded-full overflow-hidden"
             >
-              <social.icon className="w-5 h-5" />
+              <img src={social.icon} alt={social.label} className="w-full h-full object-cover" />
             </motion.a>
           ))}
         </div>
