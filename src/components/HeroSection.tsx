@@ -34,6 +34,9 @@ const HeroSection = () => {
             <img
               src={mogdhoPhoto}
               alt="Mogdho Paul"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
               className="w-full h-full object-cover"
             />
           </div>
