@@ -48,7 +48,7 @@ const Footer = () => {
           or email at{" "}
           <a
             href="mailto:mogdhapal@gmail.com"
-            className="text-gradient-gold font-display tracking-wider hover:opacity-80 transition-opacity underline underline-offset-4 decoration-primary/40"
+            className="text-primary font-semibold tracking-wide hover:opacity-80 transition-opacity underline underline-offset-4 decoration-primary/40"
           >
             mogdhapal@gmail.com
           </a>
