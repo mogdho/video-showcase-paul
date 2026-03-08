@@ -84,4 +84,29 @@
   .border-gradient-gold {
     border-image: linear-gradient(135deg, hsl(40 85% 55%), hsl(40 90% 65%)) 1;
   }
+
+  .clip-glitch-top {
+    clip-path: inset(0 0 60% 0);
+  }
+
+  .clip-glitch-bottom {
+    clip-path: inset(60% 0 0 0);
+  }
+
+  @keyframes glitch-flicker {
+    0%, 100% { opacity: 1; transform: translate(0); }
+    10% { transform: translate(-2px, 1px); }
+    20% { transform: translate(2px, -1px); opacity: 0.8; }
+    30% { transform: translate(0); }
+    40% { transform: translate(1px, 2px); opacity: 0.9; }
+    50% { transform: translate(-1px, -1px); }
+    60% { transform: translate(2px, 0); opacity: 0.85; }
+    70% { transform: translate(0); }
+    80% { transform: translate(-2px, 1px); opacity: 0.9; }
+    90% { transform: translate(1px, -1px); }
+  }
+
+  .animate-glitch-flicker {
+    animation: glitch-flicker 0.15s infinite;
+  }
 }
