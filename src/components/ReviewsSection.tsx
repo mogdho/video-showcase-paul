@@ -1,12 +1,14 @@
+import { useState, useEffect } from "react";
 import ScrollReveal from "./ScrollReveal";
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import clientMewdreamer from "@/assets/client-mewdreamer.png";
 import clientJoearias from "@/assets/client-joearias.png";
 import clientElla from "@/assets/client-ella.png";
 import clientElsie from "@/assets/client-elsie.png";
 
-const reviews = [
+const defaultReviews = [
   {
     name: "mewdreamer",
     role: "Content Creator, US",
@@ -37,7 +39,15 @@ const reviews = [
   },
 ];
 
-const ReviewCard = ({ review, index }: { review: typeof reviews[0]; index: number }) => (
+type ReviewData = {
+  name: string;
+  role: string;
+  text: string;
+  stars: number;
+  avatar: string;
+};
+
+const ReviewCard = ({ review, index }: { review: ReviewData; index: number }) => (
   <motion.div
     initial={{ opacity: 0, y: 30 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -77,6 +87,28 @@ const ReviewCard = ({ review, index }: { review: typeof reviews[0]; index: numbe
 );
 
 const ReviewsSection = () => {
+  const [reviews, setReviews] = useState<ReviewData[]>(defaultReviews);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      const { data } = await supabase
+        .from("reviews")
+        .select("*")
+        .order("sort_order");
+
+      if (data && data.length > 0) {
+        setReviews(data.map((r) => ({
+          name: r.name,
+          role: r.role,
+          text: r.text,
+          stars: r.stars,
+          avatar: r.avatar_url || clientMewdreamer,
+        })));
+      }
+    };
+    fetchReviews();
+  }, []);
+
   return (
     <section id="reviews" className="relative py-24 px-6">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
@@ -93,7 +125,7 @@ const ReviewsSection = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {reviews.map((review, i) => (
-            <ReviewCard key={review.name} review={review} index={i} />
+            <ReviewCard key={review.name + i} review={review} index={i} />
           ))}
         </div>
       </div>
