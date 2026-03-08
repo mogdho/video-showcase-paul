@@ -7,6 +7,7 @@ import iconX from "@/assets/icon-x.png";
 
 const quickLinks = [
   { label: "About Me", href: "#about" },
+  { label: "Showreel", href: "#showreel" },
   { label: "Skills", href: "#skills" },
   { label: "My Work", href: "#work" },
   { label: "Reviews", href: "#reviews" },
