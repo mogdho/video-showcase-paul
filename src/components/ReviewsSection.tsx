@@ -31,7 +31,7 @@ const reviews = [
   {
     name: "Elsie Ross",
     role: "Software Developer",
-    text: "It was a pleasure working with Shah.",
+    text: "It was a pleasure working with Paul.",
     stars: 5,
     avatar: clientElsie,
   },
