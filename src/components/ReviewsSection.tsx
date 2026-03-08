@@ -1,31 +1,39 @@
 import ScrollReveal from "./ScrollReveal";
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
+import clientMewdreamer from "@/assets/client-mewdreamer.png";
+import clientJoearias from "@/assets/client-joearias.png";
+import clientElla from "@/assets/client-ella.png";
+import clientElsie from "@/assets/client-elsie.png";
 
 const reviews = [
   {
     name: "mewdreamer",
-    role: "Client from Fiverr (US)",
+    role: "Content Creator, US",
     text: "Great job; fast turn around; fun quirky video made from a bunch of small snippet videos I recorded. Would definitely recommend!",
     stars: 4,
+    avatar: clientMewdreamer,
   },
   {
     name: "joearias189",
-    role: "Fitness Instructor, Client from Fiverr",
+    role: "Fitness Instructor & YouTuber",
     text: "Great seller, always responsive, I asked him to change something literally more than 10 times and he was so generous and professional! Definitely recommend him but just not too much otherwise he won't be available for my next job! lol",
     stars: 5,
+    avatar: clientJoearias,
   },
   {
     name: "Ella Perez",
     role: "Nutrition Expert, Food Villa",
     text: "Fantastic - he was extremely responsive, helpful and fast! I will be calling on him for EVERY video need I have. Actually sending him another request now! :)",
     stars: 5,
+    avatar: clientElla,
   },
   {
     name: "Elsie Ross",
     role: "Software Developer",
     text: "It was a pleasure working with Shah.",
     stars: 5,
+    avatar: clientElsie,
   },
 ];
 
@@ -40,9 +48,11 @@ const ReviewCard = ({ review, index }: { review: typeof reviews[0]; index: numbe
     <p className="text-sm text-muted-foreground leading-relaxed mb-6">"{review.text}"</p>
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-display text-sm uppercase">
-          {review.name.charAt(0)}
-        </div>
+        <img
+          src={review.avatar}
+          alt={review.name}
+          className="w-10 h-10 rounded-full object-cover border border-border"
+        />
         <div>
           <h4 className="text-sm font-display tracking-wider text-foreground">{review.name}</h4>
           <p className="text-xs text-muted-foreground">{review.role}</p>
