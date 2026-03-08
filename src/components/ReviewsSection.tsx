@@ -39,6 +39,13 @@ const defaultReviews = [
   },
 ];
 
+const defaultAvatarMap: Record<string, string> = {
+  mewdreamer: clientMewdreamer,
+  joearias189: clientJoearias,
+  "Ella Perez": clientElla,
+  "Elsie Ross": clientElsie,
+};
+
 type ReviewData = {
   name: string;
   role: string;
@@ -102,7 +109,7 @@ const ReviewsSection = () => {
           role: r.role,
           text: r.text,
           stars: r.stars,
-          avatar: r.avatar_url || clientMewdreamer,
+          avatar: r.avatar_url || defaultAvatarMap[r.name] || clientMewdreamer,
         })));
       }
     };
