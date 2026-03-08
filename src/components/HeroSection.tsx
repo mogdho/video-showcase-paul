@@ -37,8 +37,6 @@ const HeroSection = () => {
               className="w-full h-full object-cover"
             />
           </div>
-          {/* Online indicator */}
-          <div className="absolute bottom-1 right-1 w-5 h-5 rounded-full bg-green-500 border-2 border-background" />
         </motion.div>
 
         {/* Name */}
