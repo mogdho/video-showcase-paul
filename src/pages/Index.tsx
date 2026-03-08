@@ -3,6 +3,7 @@ import HeroSection from "@/components/HeroSection";
 import VideoGrid from "@/components/VideoGrid";
 import AboutSection from "@/components/AboutSection";
 import Footer from "@/components/Footer";
+import GrainOverlay from "@/components/GrainOverlay";
 
 const Index = () => {
   return (
