@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Trash2, Save } from "lucide-react";
+import { Plus, Trash2, Save, Upload, X } from "lucide-react";
 
 type Skill = {
   id: string;
@@ -12,13 +12,18 @@ type Skill = {
   sort_order: number;
 };
 
-const iconOptions = ["Palette", "Video", "Layers", "Music", "Sparkles", "Wand2", "Camera", "Film", "Monitor"];
-const tierOptions = ["Beginner", "Intermediate", "Advanced", "Expert", "Master"];
+const tierOptions = [
+  { value: "Expert", label: "Expert" },
+  { value: "Moderate", label: "Moderate" },
+  { value: "Noob", label: "Noob" },
+];
 
 const SkillsManager = () => {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState<string | null>(null);
+  const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   const fetchSkills = useCallback(async () => {
     const { data } = await supabase
@@ -33,13 +38,27 @@ const SkillsManager = () => {
     fetchSkills();
   }, [fetchSkills]);
 
+  const handleIconUpload = async (skillId: string, file: File) => {
+    setUploading(skillId);
+    const ext = file.name.split(".").pop();
+    const filePath = `skills/${skillId}.${ext}`;
+
+    await supabase.storage.from("thumbnails").upload(filePath, file, { upsert: true });
+
+    const { data: urlData } = supabase.storage.from("thumbnails").getPublicUrl(filePath);
+    const iconUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+
+    setSkills(skills.map((s) => (s.id === skillId ? { ...s, icon: iconUrl } : s)));
+    setUploading(null);
+  };
+
   const handleAdd = async () => {
     const newSkill = {
       name: "New Skill",
       level: 80,
-      tier: "Advanced",
+      tier: "Moderate",
       icon: "Palette",
-      description: "Skill description",
+      description: "What this skill covers",
       sort_order: skills.length,
     };
     await supabase.from("skills").insert(newSkill);
@@ -71,6 +90,8 @@ const SkillsManager = () => {
     await fetchSkills();
   };
 
+  const isUrl = (str: string) => str.startsWith("http");
+
   if (loading) {
     return <p className="text-muted-foreground">Loading skills...</p>;
   }
@@ -89,60 +110,98 @@ const SkillsManager = () => {
         </div>
 
         {skills.length === 0 ? (
-          <p className="text-sm text-muted-foreground/50">No skills yet.</p>
+          <p className="text-sm text-muted-foreground/50">No skills yet. Click "Add Skill" to get started.</p>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {skills.map((skill) => (
-              <div key={skill.id} className="bg-card border border-border rounded-xl p-4 space-y-3">
-                <div className="flex items-center gap-3">
-                  <select
-                    value={skill.icon}
-                    onChange={(e) => handleUpdate(skill.id, "icon", e.target.value)}
-                    className="px-2 py-1 rounded bg-secondary border border-border text-foreground text-xs"
-                  >
-                    {iconOptions.map((icon) => (
-                      <option key={icon} value={icon}>{icon}</option>
-                    ))}
-                  </select>
-                  <input
-                    type="text"
-                    value={skill.name}
-                    onChange={(e) => handleUpdate(skill.id, "name", e.target.value)}
-                    placeholder="Skill name"
-                    className="flex-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground text-sm"
-                  />
-                  <select
-                    value={skill.tier}
-                    onChange={(e) => handleUpdate(skill.id, "tier", e.target.value)}
-                    className="px-2 py-1 rounded bg-secondary border border-border text-foreground text-xs"
-                  >
-                    {tierOptions.map((tier) => (
-                      <option key={tier} value={tier}>{tier}</option>
-                    ))}
-                  </select>
+              <div key={skill.id} className="bg-card border border-border rounded-xl p-4 space-y-4">
+                {/* Row 1: Icon + Name + Delete */}
+                <div className="flex items-start gap-4">
+                  {/* Icon upload area */}
+                  <div className="flex-shrink-0">
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      className="hidden"
+                      ref={(el) => { fileInputRefs.current[skill.id] = el; }}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleIconUpload(skill.id, file);
+                      }}
+                    />
+                    <button
+                      onClick={() => fileInputRefs.current[skill.id]?.click()}
+                      className="w-16 h-16 rounded-xl border-2 border-dashed border-border hover:border-primary/50 flex items-center justify-center overflow-hidden transition-colors bg-secondary/50"
+                      title="Upload icon (PNG)"
+                    >
+                      {uploading === skill.id ? (
+                        <span className="text-xs text-muted-foreground animate-pulse">...</span>
+                      ) : isUrl(skill.icon) ? (
+                        <img src={skill.icon} alt={skill.name} className="w-full h-full object-contain p-1" />
+                      ) : (
+                        <Upload className="w-5 h-5 text-muted-foreground" />
+                      )}
+                    </button>
+                    <p className="text-[10px] text-muted-foreground/60 text-center mt-1">Icon</p>
+                  </div>
+
+                  {/* Name + Description */}
+                  <div className="flex-1 space-y-2">
+                    <input
+                      type="text"
+                      value={skill.name}
+                      onChange={(e) => handleUpdate(skill.id, "name", e.target.value)}
+                      placeholder="Skill name (e.g. Premiere Pro)"
+                      className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground text-sm font-semibold"
+                    />
+                    <input
+                      type="text"
+                      value={skill.description || ""}
+                      onChange={(e) => handleUpdate(skill.id, "description", e.target.value)}
+                      placeholder="What it accounts for (e.g. Video editing, color grading)"
+                      className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground text-sm"
+                    />
+                  </div>
+
+                  {/* Delete */}
                   <button
                     onClick={() => handleDelete(skill.id)}
-                    className="text-muted-foreground hover:text-red-400 transition-colors"
+                    className="text-muted-foreground hover:text-destructive transition-colors mt-2"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
-                <input
-                  type="text"
-                  value={skill.description || ""}
-                  onChange={(e) => handleUpdate(skill.id, "description", e.target.value)}
-                  placeholder="Description"
-                  className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground text-sm"
-                />
+
+                {/* Row 2: Proficiency */}
                 <div className="flex items-center gap-3">
-                  <span className="text-xs text-muted-foreground w-16">Level: {skill.level}%</span>
+                  <span className="text-xs text-muted-foreground w-20">Proficiency:</span>
+                  <div className="flex gap-2">
+                    {tierOptions.map((tier) => (
+                      <button
+                        key={tier.value}
+                        onClick={() => handleUpdate(skill.id, "tier", tier.value)}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                          skill.tier === tier.value
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-secondary border border-border text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {tier.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Row 3: Level slider */}
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-muted-foreground w-20">Level: {skill.level}%</span>
                   <input
                     type="range"
                     min="0"
                     max="100"
                     value={skill.level}
                     onChange={(e) => handleUpdate(skill.id, "level", parseInt(e.target.value))}
-                    className="flex-1"
+                    className="flex-1 accent-primary"
                   />
                 </div>
               </div>
