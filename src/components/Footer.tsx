@@ -23,6 +23,9 @@ const Footer = () => {
     <footer id="contact" className="py-16 px-6">
       <div className="max-w-4xl mx-auto">
         <ScrollReveal>
+          <h2 className="text-4xl sm:text-5xl font-display text-gradient-gold tracking-wider text-center mb-10">
+            Let's Work Together
+          </h2>
           <div className="bg-card border border-border rounded-2xl p-8 sm:p-10">
             {/* Quick Links */}
             <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Quick Links</h3>
