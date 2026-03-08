@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Film, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 const links = [
   { label: "Work", href: "#work" },
