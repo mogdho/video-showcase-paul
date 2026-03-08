@@ -57,6 +57,8 @@ const SkillsSection = () => {
                 </div>
               </div>
 
+              <p className="text-xs text-muted-foreground mb-3">{skill.desc}</p>
+
               {/* Progress bar */}
               <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
                 <motion.div
