@@ -126,18 +126,6 @@ const HeroSection = () => {
           </div>
         </motion.div>
 
-        {/* CTA */}
-        <motion.a
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, delay: 1.3 }}
-          whileHover={{ scale: 1.08, boxShadow: "0 0 30px hsl(40 85% 55% / 0.5)" }}
-          whileTap={{ scale: 0.95 }}
-          href="#work"
-          className="mt-8 inline-flex items-center gap-2 px-8 py-3 rounded-full bg-primary text-primary-foreground font-semibold text-sm uppercase tracking-wider hover:bg-primary/90 transition-all duration-300 glow-gold"
-        >
-          View My Work
-        </motion.a>
       </div>
 
       <a href="#work" className="absolute bottom-10 z-10 animate-bounce text-muted-foreground hover:text-primary transition-colors">
