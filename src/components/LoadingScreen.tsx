@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 
-const GLITCH_CHARS = "モグドポールアイウエオカキクケコサシスセソ";
 const LINES = [
   { text: "Mogdho Paul", isName: true },
   { text: "Engaging Video Editor", isName: false },
@@ -9,74 +8,47 @@ const LINES = [
 
 const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
   const [displays, setDisplays] = useState(LINES.map(() => ""));
-  const [phase, setPhase] = useState<"glitch" | "reveal" | "fadeout">("glitch");
+  const [phase, setPhase] = useState<"typing" | "fadeout">("typing");
   const [opacity, setOpacity] = useState(1);
 
   useEffect(() => {
     let frame = 0;
-    const totalGlitchFrames = 20;
-    const totalRevealFrames = 25;
+    const totalChars = LINES.reduce((sum, l) => sum + l.text.length, 0);
+    let charIndex = 0;
 
     const timer = setInterval(() => {
       frame++;
+      charIndex++;
 
-      if (phase === "glitch") {
-        // All lines glitch with Japanese chars
-        setDisplays(
-          LINES.map((line) =>
-            line.text
-              .split("")
-              .map((ch) =>
-                ch === " " ? " " : GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)]
-              )
-              .join("")
-          )
-        );
+      // Type out all lines sequentially
+      let remaining = charIndex;
+      const newDisplays = LINES.map((line) => {
+        if (remaining <= 0) return "";
+        const show = Math.min(remaining, line.text.length);
+        remaining -= show;
+        return line.text.slice(0, show);
+      });
 
-        if (frame >= totalGlitchFrames) {
-          frame = 0;
-          setPhase("reveal");
-        }
-      } else if (phase === "reveal") {
-        const progress = frame / totalRevealFrames;
+      setDisplays(newDisplays);
 
-        setDisplays(
-          LINES.map((line) => {
-            const revealed = Math.floor(progress * line.text.length);
-            return line.text
-              .split("")
-              .map((ch, i) => {
-                if (i < revealed) return ch;
-                if (ch === " ") return " ";
-                return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
-              })
-              .join("");
-          })
-        );
-
-        if (progress >= 1) {
-          setDisplays(LINES.map((l) => l.text));
-          clearInterval(timer);
-
-          // Hold for a moment then fade out
-          setTimeout(() => {
-            setPhase("fadeout");
-            setOpacity(0);
-            setTimeout(onComplete, 600);
-          }, 400);
-        }
+      if (charIndex >= totalChars) {
+        clearInterval(timer);
+        setTimeout(() => {
+          setPhase("fadeout");
+          setOpacity(0);
+          setTimeout(onComplete, 600);
+        }, 500);
       }
-    }, 50);
+    }, 45);
 
     return () => clearInterval(timer);
-  }, [phase, onComplete]);
+  }, [onComplete]);
 
   return (
     <div
       className="fixed inset-0 z-[200] bg-background flex flex-col items-center justify-center transition-opacity duration-500"
       style={{ opacity }}
     >
-      {/* Ambient glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-primary/5 blur-[100px]" />
 
       <div className="relative z-10 text-center space-y-2">
@@ -90,11 +62,14 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
             }
           >
             {displays[i]}
+            {/* Show cursor at the end of the currently typing line */}
+            {phase === "typing" &&
+              displays[i].length > 0 &&
+              displays[i].length < line.text.length && (
+                <span className="inline-block w-[2px] h-[1em] bg-primary animate-pulse ml-0.5 align-middle" />
+              )}
           </div>
         ))}
-
-        {/* Underscore cursor */}
-        <span className="inline-block w-3 h-[2px] bg-primary animate-pulse mt-4" />
       </div>
     </div>
   );
