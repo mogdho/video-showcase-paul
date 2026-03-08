@@ -22,10 +22,20 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 mb-8"
+            className="flex flex-wrap justify-center lg:justify-start gap-2 mb-8"
           >
-            <Film className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary tracking-wide uppercase">Video Editor</span>
+            {tags.map((tag, i) => (
+              <motion.div
+                key={tag.label}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, delay: 0.2 + i * 0.1 }}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5"
+              >
+                <tag.icon className="w-3.5 h-3.5 text-primary" />
+                <span className="text-xs font-medium text-primary tracking-wide uppercase">{tag.label}</span>
+              </motion.div>
+            ))}
           </motion.div>
 
           <motion.h1
