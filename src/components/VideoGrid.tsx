@@ -7,6 +7,10 @@ const reels = [
   { id: 2, title: "Behind the Scenes", desc: "Raw footage transformed into an engaging vertical story" },
   { id: 3, title: "Brand Awareness Reel", desc: "Quick-cut storytelling designed for maximum social media impact" },
   { id: 4, title: "Testimonial Reel", desc: "Client testimonials edited with cinematic flair and captions" },
+  { id: 5, title: "Fitness Transformation", desc: "High-energy workout montage with beat-synced cuts and bold text overlays" },
+  { id: 6, title: "Recipe Quick Edit", desc: "Fast-paced cooking reel with smooth transitions and appetizing color grading" },
+  { id: 7, title: "Travel Highlights", desc: "Stunning vertical travel clips with cinematic transitions and ambient audio" },
+  { id: 8, title: "Fashion Lookbook", desc: "Stylish outfit transitions with creative reveals and trending audio sync" },
 ];
 
 const regularVideos = [
