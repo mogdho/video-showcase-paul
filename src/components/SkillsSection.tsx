@@ -1,12 +1,17 @@
 import ScrollReveal from "./ScrollReveal";
 import { motion } from "framer-motion";
+import iconAe from "@/assets/icon-ae.png";
+import iconPr from "@/assets/icon-pr.png";
+import iconCanva from "@/assets/icon-canva.png";
+import iconPs from "@/assets/icon-ps.png";
+import iconAi from "@/assets/icon-ai.png";
 
 const skills = [
-  { name: "After Effects", level: 95, tier: "Expert" },
-  { name: "Premiere Pro", level: 90, tier: "Expert" },
-  { name: "Canva", level: 90, tier: "Expert" },
-  { name: "Photoshop", level: 65, tier: "Moderate" },
-  { name: "Illustrator", level: 60, tier: "Moderate" },
+  { name: "After Effects", level: 95, tier: "Expert", icon: iconAe },
+  { name: "Premiere Pro", level: 90, tier: "Expert", icon: iconPr },
+  { name: "Canva", level: 90, tier: "Expert", icon: iconCanva },
+  { name: "Photoshop", level: 65, tier: "Moderate", icon: iconPs },
+  { name: "Illustrator", level: 60, tier: "Moderate", icon: iconAi },
 ];
 
 const SkillsSection = () => {
@@ -34,15 +39,22 @@ const SkillsSection = () => {
               transition={{ duration: 0.5, delay: i * 0.1 }}
               className="bg-card border border-border rounded-xl p-6 hover:border-primary/30 transition-colors duration-300"
             >
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-display text-xl tracking-wider text-foreground">{skill.name}</h3>
-                <span className={`text-xs font-medium uppercase tracking-wider px-2.5 py-1 rounded-full ${
-                  skill.tier === "Expert"
-                    ? "bg-primary/15 text-primary"
-                    : "bg-muted text-muted-foreground"
-                }`}>
-                  {skill.tier}
-                </span>
+              <div className="flex items-center gap-4 mb-3">
+                <img
+                  src={skill.icon}
+                  alt={skill.name}
+                  className="w-10 h-10 rounded-lg object-contain"
+                />
+                <div className="flex-1 flex items-center justify-between">
+                  <h3 className="font-display text-xl tracking-wider text-foreground">{skill.name}</h3>
+                  <span className={`text-xs font-medium uppercase tracking-wider px-2.5 py-1 rounded-full ${
+                    skill.tier === "Expert"
+                      ? "bg-primary/15 text-primary"
+                      : "bg-muted text-muted-foreground"
+                  }`}>
+                    {skill.tier}
+                  </span>
+                </div>
               </div>
 
               {/* Progress bar */}
