@@ -116,7 +116,7 @@ const Footer = () => {
                   className="flex items-center justify-center gap-2 py-3 rounded-xl bg-secondary/50 border border-border hover:border-primary/30 transition-colors"
                 >
                   <img src={social.icon} alt={social.platform} className="w-5 h-5 object-contain" />
-                  <span className="text-sm text-foreground">{social.platform}</span>
+                  <span className="text-sm text-foreground hidden sm:inline">{social.platform}</span>
                 </motion.a>
               ))}
             </div>
