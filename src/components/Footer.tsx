@@ -37,7 +37,7 @@ const Footer = () => {
               transition={{ duration: 0.4, delay: 0.2 + i * 0.1 }}
               whileHover={{ scale: 1.2, y: -4 }}
               whileTap={{ scale: 0.9 }}
-              className="w-12 h-12 rounded-full overflow-hidden border border-border"
+              className="w-12 h-12 overflow-hidden"
             >
               <img src={social.icon} alt={social.label} className="w-full h-full object-cover" />
             </motion.a>
