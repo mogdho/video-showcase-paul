@@ -2,12 +2,14 @@ import ScrollReveal from "./ScrollReveal";
 import { motion } from "framer-motion";
 import iconAe from "@/assets/icon-ae.png";
 import iconPr from "@/assets/icon-pr.png";
+import iconVidiq from "@/assets/icon-vidiq.png";
 import iconPs from "@/assets/icon-ps.png";
 import iconAi from "@/assets/icon-ai.png";
 
 const skills = [
   { name: "After Effects", level: 95, tier: "Expert", icon: iconAe },
   { name: "Premiere Pro", level: 90, tier: "Expert", icon: iconPr },
+  { name: "VidIQ", level: 90, tier: "Expert", icon: iconVidiq },
   { name: "Photoshop", level: 65, tier: "Moderate", icon: iconPs },
   { name: "Illustrator", level: 60, tier: "Moderate", icon: iconAi },
 ];
