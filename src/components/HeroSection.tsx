@@ -128,8 +128,8 @@ const HeroSection = () => {
 
       </div>
 
-      <a href="#work" className="absolute bottom-10 z-10 animate-bounce text-muted-foreground hover:text-primary transition-colors">
-        <ChevronDown className="w-6 h-6" />
+      <a href="#work" className="absolute bottom-10 z-10 animate-bounce text-primary drop-shadow-[0_0_10px_hsl(40_85%_55%/0.6)] hover:drop-shadow-[0_0_20px_hsl(40_85%_55%/0.8)] transition-all">
+        <ChevronDown className="w-7 h-7" />
       </a>
     </section>
   );
