@@ -1,8 +1,16 @@
-import ScrollReveal from "./ScrollReveal";
 import { motion } from "framer-motion";
+import { ChevronRight, Mail, MapPin } from "lucide-react";
+import ScrollReveal from "./ScrollReveal";
 import iconFacebook from "@/assets/icon-facebook.png";
 import iconInstagram from "@/assets/icon-instagram.png";
 import iconX from "@/assets/icon-x.png";
+
+const quickLinks = [
+  { label: "Skills", href: "#skills" },
+  { label: "My Work", href: "#work" },
+  { label: "Reviews", href: "#reviews" },
+  { label: "Contact", href: "#contact" },
+];
 
 const socials = [
   { icon: iconFacebook, label: "Facebook", href: "#" },
@@ -12,49 +20,65 @@ const socials = [
 
 const Footer = () => {
   return (
-    <footer id="contact" className="py-16 px-6 border-t border-border">
-      <div className="max-w-4xl mx-auto text-center">
+    <footer id="contact" className="py-16 px-6">
+      <div className="max-w-4xl mx-auto">
         <ScrollReveal>
-          <h2 className="text-4xl sm:text-5xl font-display text-gradient-gold tracking-wider mb-4">
-            Let's Work Together
-          </h2>
-          <p className="text-muted-foreground mb-10 max-w-sm mx-auto">
-            Got a project in mind? Reach out through any of my socials.
-          </p>
+          <div className="bg-card border border-border rounded-2xl p-8 sm:p-10">
+            {/* Quick Links */}
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Quick Links</h3>
+            <div className="bg-secondary/50 rounded-xl overflow-hidden mb-8">
+              {quickLinks.map((link, i) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className={`flex items-center justify-between px-5 py-4 text-sm text-foreground hover:text-primary hover:bg-secondary transition-colors ${
+                    i < quickLinks.length - 1 ? "border-b border-border/50" : ""
+                  }`}
+                >
+                  {link.label}
+                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                </a>
+              ))}
+            </div>
+
+            {/* Contact */}
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Contact</h3>
+            <div className="bg-secondary/50 rounded-xl overflow-hidden mb-8">
+              <a
+                href="mailto:mogdhapal@gmail.com"
+                className="flex items-center gap-3 px-5 py-4 text-sm text-foreground hover:text-primary transition-colors border-b border-border/50"
+              >
+                <Mail className="w-4 h-4 text-primary" />
+                mogdhapal@gmail.com
+              </a>
+              <div className="flex items-center gap-3 px-5 py-4 text-sm text-muted-foreground">
+                <MapPin className="w-4 h-4 text-primary" />
+                Brahmanbaria, Bangladesh
+              </div>
+            </div>
+
+            {/* Connect */}
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Connect</h3>
+            <div className="grid grid-cols-3 gap-3">
+              {socials.map((social) => (
+                <motion.a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="flex items-center justify-center gap-2 py-3 rounded-xl bg-secondary/50 border border-border hover:border-primary/30 transition-colors"
+                >
+                  <img src={social.icon} alt={social.label} className="w-5 h-5 object-contain" />
+                  <span className="text-sm text-foreground">{social.label}</span>
+                </motion.a>
+              ))}
+            </div>
+          </div>
         </ScrollReveal>
 
-        <div className="flex items-center justify-center gap-4">
-          {socials.map((social, i) => (
-            <motion.a
-              key={social.label}
-              href={social.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={social.label}
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: 0.2 + i * 0.1 }}
-              whileHover={{ scale: 1.2, y: -4 }}
-              whileTap={{ scale: 0.9 }}
-              className="w-12 h-12 overflow-hidden"
-            >
-              <img src={social.icon} alt={social.label} className="w-full h-full object-cover" />
-            </motion.a>
-          ))}
-        </div>
-
-        <p className="mt-8 text-base text-muted-foreground">
-          or email at{" "}
-          <a
-            href="mailto:mogdhapal@gmail.com"
-            className="text-primary font-semibold tracking-wide hover:opacity-80 transition-opacity underline underline-offset-4 decoration-primary/40"
-          >
-            mogdhapal@gmail.com
-          </a>
-        </p>
-
-        <p className="mt-16 text-xs text-muted-foreground">
+        <p className="mt-8 text-center text-xs text-muted-foreground">
           © {new Date().getFullYear()} Mogdho Paul. All rights reserved.
         </p>
       </div>
