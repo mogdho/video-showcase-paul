@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import SkillsSection from "@/components/SkillsSection";
+import ShowreelSection from "@/components/ShowreelSection";
 import VideoGrid from "@/components/VideoGrid";
 import ReviewsSection from "@/components/ReviewsSection";
 import Footer from "@/components/Footer";
@@ -21,6 +22,7 @@ const Index = () => {
       <ParticleBackground />
       <Navbar />
       <HeroSection />
+      <ShowreelSection />
       <SkillsSection />
       <VideoGrid />
       <ReviewsSection />
