@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
+import SkillsSection from "@/components/SkillsSection";
 import VideoGrid from "@/components/VideoGrid";
 import AboutSection from "@/components/AboutSection";
 import Footer from "@/components/Footer";
