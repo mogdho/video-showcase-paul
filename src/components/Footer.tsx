@@ -44,6 +44,13 @@ const Footer = () => {
           ))}
         </div>
 
+        <p className="mt-8 text-sm text-muted-foreground">
+          or email at{" "}
+          <a href="mailto:hello@shahfahadahmed.com" className="text-muted-foreground hover:text-primary transition-colors">
+            hello@shahfahadahmed.com
+          </a>
+        </p>
+
         <p className="mt-16 text-xs text-muted-foreground">
           © {new Date().getFullYear()} Mogdho Paul. All rights reserved.
         </p>
