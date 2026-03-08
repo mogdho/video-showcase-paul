@@ -25,7 +25,6 @@ const Index = () => {
       <VideoGrid />
       <ReviewsSection />
       <Footer />
-      <Footer />
     </div>
   );
 };
