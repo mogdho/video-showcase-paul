@@ -43,7 +43,7 @@ const SkillsSection = () => {
                 <img
                   src={skill.icon}
                   alt={skill.name}
-                  className="w-10 h-10 rounded-lg object-contain"
+                  className="w-14 h-14 rounded-xl object-contain"
                 />
                 <div className="flex-1 flex items-center justify-between">
                   <h3 className="font-display text-xl tracking-wider text-foreground">{skill.name}</h3>
