@@ -22,6 +22,7 @@ const Index = () => {
       <ParticleBackground />
       <Navbar />
       <HeroSection />
+      <ShowreelSection />
       <SkillsSection />
       <VideoGrid />
       <ReviewsSection />
