@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Film, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 const links = [
   { label: "Work", href: "#work" },
@@ -24,9 +24,8 @@ const Navbar = () => {
       }`}
     >
       <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
-        <a href="#" className="flex items-center gap-2 text-primary">
-          <Film className="w-5 h-5" />
-          <span className="font-display text-xl tracking-wider">MP</span>
+        <a href="#" className="font-display text-2xl sm:text-3xl tracking-widest text-gradient-gold leading-none">
+          MOGDHO PAUL
         </a>
 
         {/* Desktop links */}
