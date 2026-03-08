@@ -59,12 +59,18 @@ const ReviewCard = ({ review, index }: { review: typeof reviews[0]; index: numbe
         </div>
       </div>
       <div className="flex gap-0.5">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Star
-            key={i}
-            className={`w-3.5 h-3.5 ${i < review.stars ? "text-primary fill-primary" : "text-muted-foreground/30"}`}
-          />
-        ))}
+        {Array.from({ length: 5 }).map((_, i) => {
+          const filled = i < review.stars;
+          const colorClass = review.stars === 5
+            ? "text-green-500 fill-green-500"
+            : "text-primary fill-primary";
+          return (
+            <Star
+              key={i}
+              className={`w-3.5 h-3.5 ${filled ? colorClass : "text-muted-foreground/30"}`}
+            />
+          );
+        })}
       </div>
     </div>
   </motion.div>
