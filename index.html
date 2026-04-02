@@ -28,20 +28,57 @@
     <script>
       (function () {
         "use strict";
-        document.addEventListener("contextmenu", (e) => e.preventDefault());
-        document.addEventListener("keydown", function (e) {
-          if (
-            e.key === "F12" ||
-            (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C")) ||
-            (e.ctrlKey && e.key === "u")
-          ) {
-            e.preventDefault();
-            alert("Access Denied — This content is protected.");
+        var noop = function () {};
+        var consoleMethods = ["log", "warn", "error", "info", "debug", "table", "trace", "dir"];
+        consoleMethods.forEach(function (method) {
+          try {
+            Object.defineProperty(console, method, {
+              get: function () { return noop; },
+              set: function () {},
+              configurable: false
+            });
+          } catch (e) {
+            console[method] = noop;
           }
         });
-        var noop = function () {};
-        Object.keys(console).forEach(function (method) {
-          console[method] = noop;
+        try { Object.freeze(console); } catch (e) {}
+        var observer = new MutationObserver(function (mutations) {
+          mutations.forEach(function (mutation) {
+            mutation.addedNodes.forEach(function (node) {
+              if (node.tagName === "IFRAME") {
+                try {
+                  node.contentWindow.console.log = noop;
+                  node.contentWindow.console.warn = noop;
+                  node.contentWindow.console.error = noop;
+                  Object.freeze(node.contentWindow.console);
+                } catch (e) {}
+              }
+            });
+          });
+        });
+        observer.observe(document.documentElement, { childList: true, subtree: true });
+        setInterval(function () {
+          var start = performance.now();
+          debugger;
+          if (performance.now() - start > 100) {
+            document.body.innerHTML = '<div style="display:flex; height:100vh; background:#000; color:red; align-items:center; justify-content:center; font-family:sans-serif; font-size:24px;">⚠️ Access Denied. Close DevTools.</div>';
+          }
+        }, 2000);
+        document.addEventListener("contextmenu", function (e) { e.preventDefault(); return false; });
+        document.addEventListener("keydown", function (e) {
+          if (
+            e.key === "F12" || e.keyCode === 123 ||
+            (e.ctrlKey && e.shiftKey && ["I", "J", "C"].includes(e.key.toUpperCase())) ||
+            (e.ctrlKey && e.key.toLowerCase() === "u") ||
+            (e.ctrlKey && e.key.toLowerCase() === "s")
+          ) {
+            e.preventDefault();
+            return false;
+          }
+        });
+        document.addEventListener("dragstart", function (e) { e.preventDefault(); });
+        ["copy", "cut", "paste"].forEach(function (event) {
+          document.addEventListener(event, function (e) { e.preventDefault(); });
         });
       })();
     </script>
