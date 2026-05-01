@@ -3,17 +3,23 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
+const ALLOWED_ADMIN_EMAIL = "mogdhapal@gmail.com";
+
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) navigate("/admin");
+      if (session?.user?.email === ALLOWED_ADMIN_EMAIL) {
+        navigate("/admin");
+      } else if (session) {
+        // Any other account is not allowed
+        supabase.auth.signOut();
+      }
     });
   }, [navigate]);
 
@@ -22,22 +28,18 @@ const AdminLogin = () => {
     setLoading(true);
     setError("");
 
-    if (isSignUp) {
-      const { error } = await supabase.auth.signUp({ email, password });
-      if (error) {
-        setError(error.message);
-        setLoading(false);
-      } else {
-        navigate("/admin");
-      }
+    if (email.trim().toLowerCase() !== ALLOWED_ADMIN_EMAIL) {
+      setError("Access denied.");
+      setLoading(false);
+      return;
+    }
+
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      setError("Invalid credentials.");
+      setLoading(false);
     } else {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) {
-        setError(error.message);
-        setLoading(false);
-      } else {
-        navigate("/admin");
-      }
+      navigate("/admin");
     }
   };
 
@@ -49,7 +51,7 @@ const AdminLogin = () => {
         className="w-full max-w-sm"
       >
         <h1 className="text-3xl font-display text-gradient-gold text-center mb-8 tracking-wider">
-          {isSignUp ? "Create Account" : "Admin Login"}
+          Admin Login
         </h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
@@ -72,14 +74,8 @@ const AdminLogin = () => {
             disabled={loading}
             className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm uppercase tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50"
           >
-            {loading ? (isSignUp ? "Creating..." : "Signing in...") : (isSignUp ? "Create Account" : "Sign In")}
+            {loading ? "Signing in..." : "Sign In"}
           </button>
-          <p className="text-center text-sm text-muted-foreground">
-            {isSignUp ? "Already have an account?" : "No account yet?"}{" "}
-            <button type="button" onClick={() => { setIsSignUp(!isSignUp); setError(""); }} className="text-primary hover:underline">
-              {isSignUp ? "Sign In" : "Sign Up"}
-            </button>
-          </p>
         </form>
       </motion.div>
     </div>

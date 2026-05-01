@@ -16,8 +16,13 @@ const AdminPanel = () => {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) navigate("/admin/login");
-      else setLoading(false);
+      if (!session) {
+        navigate("/admin/login");
+      } else if (session.user?.email !== "mogdhapal@gmail.com") {
+        supabase.auth.signOut().then(() => navigate("/admin/login"));
+      } else {
+        setLoading(false);
+      }
     });
   }, [navigate]);
 
