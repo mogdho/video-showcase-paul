@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import { LogOut, Home, Video, User, BarChart3, Sparkles, MessageSquare, Link } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VideoManager from "@/components/admin/VideoManager";
@@ -10,31 +10,106 @@ import SkillsManager from "@/components/admin/SkillsManager";
 import ReviewsManager from "@/components/admin/ReviewsManager";
 import LinksManager from "@/components/admin/LinksManager";
 
+const ALLOWED_ADMIN_EMAIL = "mogdhapal@gmail.com";
+
 const AdminPanel = () => {
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [authed, setAuthed] = useState(false);
+
+  // Login form state
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        navigate("/admin/login");
-      } else if (session.user?.email !== "mogdhapal@gmail.com") {
-        supabase.auth.signOut().then(() => navigate("/admin/login"));
+    const check = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user?.email === ALLOWED_ADMIN_EMAIL) {
+        setAuthed(true);
+      } else if (session) {
+        await supabase.auth.signOut();
+        setAuthed(false);
       } else {
-        setLoading(false);
+        setAuthed(false);
       }
-    });
-  }, [navigate]);
+      setLoading(false);
+    };
+    check();
+  }, []);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError("");
+
+    if (email.trim().toLowerCase() !== ALLOWED_ADMIN_EMAIL) {
+      setError("Access denied.");
+      setSubmitting(false);
+      return;
+    }
+
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      setError("Invalid credentials.");
+      setSubmitting(false);
+    } else {
+      setAuthed(true);
+      setSubmitting(false);
+    }
+  };
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate("/admin/login");
+    setAuthed(false);
+    setEmail("");
+    setPassword("");
   };
 
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
+
+  if (!authed) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full max-w-sm"
+        >
+          <h1 className="text-3xl font-display text-gradient-gold text-center mb-8 tracking-wider">
+            Admin Login
+          </h1>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl bg-card border border-border text-foreground text-sm focus:outline-none focus:border-primary/50"
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl bg-card border border-border text-foreground text-sm focus:outline-none focus:border-primary/50"
+            />
+            {error && <p className="text-sm text-destructive">{error}</p>}
+            <button
+              type="submit"
+              disabled={submitting}
+              className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm uppercase tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50"
+            >
+              {submitting ? "Signing in..." : "Sign In"}
+            </button>
+          </form>
+        </motion.div>
       </div>
     );
   }
@@ -93,29 +168,12 @@ const AdminPanel = () => {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="hero">
-            <HeroManager />
-          </TabsContent>
-
-          <TabsContent value="stats">
-            <StatsManager />
-          </TabsContent>
-
-          <TabsContent value="skills">
-            <SkillsManager />
-          </TabsContent>
-
-          <TabsContent value="videos">
-            <VideoManager />
-          </TabsContent>
-
-          <TabsContent value="reviews">
-            <ReviewsManager />
-          </TabsContent>
-
-          <TabsContent value="links">
-            <LinksManager />
-          </TabsContent>
+          <TabsContent value="hero"><HeroManager /></TabsContent>
+          <TabsContent value="stats"><StatsManager /></TabsContent>
+          <TabsContent value="skills"><SkillsManager /></TabsContent>
+          <TabsContent value="videos"><VideoManager /></TabsContent>
+          <TabsContent value="reviews"><ReviewsManager /></TabsContent>
+          <TabsContent value="links"><LinksManager /></TabsContent>
         </Tabs>
       </div>
     </div>
