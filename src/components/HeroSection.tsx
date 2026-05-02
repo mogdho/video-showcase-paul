@@ -27,6 +27,7 @@ const HeroSection = () => {
     profile_photo_url: "",
   });
   const [stats, setStats] = useState<StatData[]>(defaultStats);
+  const [tags, setTags] = useState<HeroTag[]>(defaultHeroTags);
 
   useEffect(() => {
     const fetchData = async () => {
