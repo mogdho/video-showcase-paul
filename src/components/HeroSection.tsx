@@ -1,15 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Film, Search, Mic, ImageIcon, ChevronDown, MapPin, Clapperboard, Sparkles, Clock, FolderOpen, Users, Star, Award, TrendingUp, Eye, Heart, type LucideIcon } from "lucide-react";
+import { ChevronDown, MapPin, Clapperboard, Sparkles, Clock, FolderOpen, Users, Star, Award, TrendingUp, Eye, Heart, type LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import mogdhoPhoto from "@/assets/mogdho-photo.png";
-
-const tags = [
-  { icon: Film, label: "Video Editor" },
-  { icon: Search, label: "YouTube SEO" },
-  { icon: Mic, label: "Podcast Shorts Editor" },
-  { icon: ImageIcon, label: "Thumbnail Designer AI" },
-];
+import { parseHeroTags, tagIconMap, defaultHeroTags, type HeroTag } from "@/lib/heroTags";
 
 const defaultStats = [
   { icon: "Clapperboard", label: "Projects", value: "50+" },
