@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Save, Upload } from "lucide-react";
+import { Save, Upload, Plus, Trash2 } from "lucide-react";
+import { parseHeroTags, tagIconNames, tagIconMap, defaultHeroTags, type HeroTag } from "@/lib/heroTags";
+import { Sparkles } from "lucide-react";
 
 type SiteSettings = Record<string, string>;
 
