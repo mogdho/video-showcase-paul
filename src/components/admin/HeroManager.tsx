@@ -35,6 +35,7 @@ const HeroManager = () => {
       if (settingsMap.profile_photo_url) {
         setProfilePreview(settingsMap.profile_photo_url);
       }
+      setTags(parseHeroTags(settingsMap.hero_tags));
     }
     setLoading(false);
   };
