@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Save, Upload } from "lucide-react";
+import { Save, Upload, Plus, Trash2 } from "lucide-react";
+import { parseHeroTags, tagIconNames, tagIconMap, defaultHeroTags, type HeroTag } from "@/lib/heroTags";
+import { Sparkles } from "lucide-react";
 
 type SiteSettings = Record<string, string>;
 
@@ -16,6 +18,7 @@ const HeroManager = () => {
   const [saving, setSaving] = useState(false);
   const [profileFile, setProfileFile] = useState<File | null>(null);
   const [profilePreview, setProfilePreview] = useState("");
+  const [tags, setTags] = useState<HeroTag[]>(defaultHeroTags);
 
   useEffect(() => {
     fetchSettings();
@@ -32,6 +35,7 @@ const HeroManager = () => {
       if (settingsMap.profile_photo_url) {
         setProfilePreview(settingsMap.profile_photo_url);
       }
+      setTags(parseHeroTags(settingsMap.hero_tags));
     }
     setLoading(false);
   };
@@ -61,6 +65,7 @@ const HeroManager = () => {
 
       const updatedSettings = { ...settings };
       if (profileUrl) updatedSettings.profile_photo_url = profileUrl;
+      updatedSettings.hero_tags = JSON.stringify(tags);
 
       for (const [key, value] of Object.entries(updatedSettings)) {
         await supabase
@@ -159,6 +164,65 @@ const HeroManager = () => {
             onChange={(e) => setSettings({ ...settings, contact_email: e.target.value })}
             className="w-full px-4 py-3 rounded-xl bg-secondary border border-border text-foreground text-sm focus:outline-none focus:border-primary/50"
           />
+        </div>
+
+        {/* Tags Editor */}
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <label className="block text-xs text-muted-foreground uppercase tracking-wider">Tags</label>
+            <button
+              type="button"
+              onClick={() => setTags([...tags, { icon: "Sparkles", label: "New Tag" }])}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-primary/10 border border-primary/30 text-xs text-primary hover:bg-primary/20 transition-colors"
+            >
+              <Plus className="w-3 h-3" /> Add Tag
+            </button>
+          </div>
+          <div className="space-y-2">
+            {tags.map((tag, idx) => {
+              const Icon = tagIconMap[tag.icon] || Sparkles;
+              return (
+                <div key={idx} className="flex items-center gap-2 p-2 rounded-lg bg-secondary border border-border">
+                  <div className="flex items-center justify-center w-9 h-9 rounded-md bg-primary/10 border border-primary/30 shrink-0">
+                    <Icon className="w-4 h-4 text-primary" />
+                  </div>
+                  <select
+                    value={tag.icon}
+                    onChange={(e) => {
+                      const next = [...tags];
+                      next[idx] = { ...next[idx], icon: e.target.value };
+                      setTags(next);
+                    }}
+                    className="px-2 py-2 rounded-md bg-background border border-border text-xs text-foreground focus:outline-none focus:border-primary/50 w-32"
+                  >
+                    {tagIconNames.map((name) => (
+                      <option key={name} value={name}>{name}</option>
+                    ))}
+                  </select>
+                  <input
+                    type="text"
+                    value={tag.label}
+                    onChange={(e) => {
+                      const next = [...tags];
+                      next[idx] = { ...next[idx], label: e.target.value };
+                      setTags(next);
+                    }}
+                    className="flex-1 px-3 py-2 rounded-md bg-background border border-border text-sm text-foreground focus:outline-none focus:border-primary/50"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setTags(tags.filter((_, i) => i !== idx))}
+                    className="p-2 rounded-md bg-destructive/10 border border-destructive/30 text-destructive hover:bg-destructive/20 transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              );
+            })}
+            {tags.length === 0 && (
+              <p className="text-xs text-muted-foreground italic">No tags yet. Click "Add Tag" to create one.</p>
+            )}
+          </div>
         </div>
 
         <button

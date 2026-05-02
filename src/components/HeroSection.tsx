@@ -1,15 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Film, Search, Mic, ImageIcon, ChevronDown, MapPin, Clapperboard, Sparkles, Clock, FolderOpen, Users, Star, Award, TrendingUp, Eye, Heart, type LucideIcon } from "lucide-react";
+import { ChevronDown, MapPin, Clapperboard, Sparkles, Clock, FolderOpen, Users, Star, Award, TrendingUp, Eye, Heart, type LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import mogdhoPhoto from "@/assets/mogdho-photo.png";
-
-const tags = [
-  { icon: Film, label: "Video Editor" },
-  { icon: Search, label: "YouTube SEO" },
-  { icon: Mic, label: "Podcast Shorts Editor" },
-  { icon: ImageIcon, label: "Thumbnail Designer AI" },
-];
+import { parseHeroTags, tagIconMap, defaultHeroTags, type HeroTag } from "@/lib/heroTags";
 
 const defaultStats = [
   { icon: "Clapperboard", label: "Projects", value: "50+" },
@@ -33,6 +27,7 @@ const HeroSection = () => {
     profile_photo_url: "",
   });
   const [stats, setStats] = useState<StatData[]>(defaultStats);
+  const [tags, setTags] = useState<HeroTag[]>(defaultHeroTags);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,6 +42,7 @@ const HeroSection = () => {
           if (row.value) settingsMap[row.key] = row.value;
         });
         setSettings((prev) => ({ ...prev, ...settingsMap }));
+        if (settingsMap.hero_tags) setTags(parseHeroTags(settingsMap.hero_tags));
       }
 
       if (statsRes.data && statsRes.data.length > 0) {
@@ -136,18 +132,21 @@ const HeroSection = () => {
           transition={{ duration: 0.5, delay: 0.85 }}
           className="flex flex-wrap justify-center gap-2 mt-6"
         >
-          {tags.map((tag, i) => (
-            <motion.div
-              key={tag.label}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, delay: 0.9 + i * 0.08 }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5"
-            >
-              <tag.icon className="w-3.5 h-3.5 text-primary" />
-              <span className="text-xs font-medium text-primary tracking-wide uppercase">{tag.label}</span>
-            </motion.div>
-          ))}
+          {tags.map((tag, i) => {
+            const TagIcon = tagIconMap[tag.icon] || Sparkles;
+            return (
+              <motion.div
+                key={`${tag.label}-${i}`}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: 0.9 + i * 0.08 }}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5"
+              >
+                <TagIcon className="w-3.5 h-3.5 text-primary" />
+                <span className="text-xs font-medium text-primary tracking-wide uppercase">{tag.label}</span>
+              </motion.div>
+            );
+          })}
         </motion.div>
 
         {/* Stats Card */}
