@@ -132,18 +132,21 @@ const HeroSection = () => {
           transition={{ duration: 0.5, delay: 0.85 }}
           className="flex flex-wrap justify-center gap-2 mt-6"
         >
-          {tags.map((tag, i) => (
-            <motion.div
-              key={tag.label}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, delay: 0.9 + i * 0.08 }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5"
-            >
-              <tag.icon className="w-3.5 h-3.5 text-primary" />
-              <span className="text-xs font-medium text-primary tracking-wide uppercase">{tag.label}</span>
-            </motion.div>
-          ))}
+          {tags.map((tag, i) => {
+            const TagIcon = tagIconMap[tag.icon] || Sparkles;
+            return (
+              <motion.div
+                key={`${tag.label}-${i}`}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: 0.9 + i * 0.08 }}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5"
+              >
+                <TagIcon className="w-3.5 h-3.5 text-primary" />
+                <span className="text-xs font-medium text-primary tracking-wide uppercase">{tag.label}</span>
+              </motion.div>
+            );
+          })}
         </motion.div>
 
         {/* Stats Card */}
