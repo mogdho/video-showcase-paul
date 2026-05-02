@@ -3,6 +3,7 @@ import ScrollReveal from "./ScrollReveal";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 type Video = {
   id: string;
@@ -36,9 +37,9 @@ const fallbackRegular = [
 ];
 
 const getEmbedSrc = (url: string): string | null => {
-  // YouTube
-  const ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^&?\s]+)/);
-  if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}`;
+  // YouTube (handles watch, youtu.be, shorts, embed)
+  const ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([^&?\s/]+)/);
+  if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1`;
   // Google Drive
   const driveMatch = url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
   if (driveMatch) return `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
@@ -47,38 +48,44 @@ const getEmbedSrc = (url: string): string | null => {
   return null;
 };
 
-const VideoCard = ({ video, aspect, index }: { video: Video; aspect: string; index: number }) => {
-  const embedSrc = video.embed_url ? getEmbedSrc(video.embed_url) : null;
+const VideoCard = ({
+  video,
+  aspect,
+  index,
+  onPlay,
+}: {
+  video: Video;
+  aspect: string;
+  index: number;
+  onPlay: (v: Video) => void;
+}) => {
+  const playable = !!video.embed_url;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
+      transition={{ duration: 0.5, delay: index * 0.05 }}
     >
-      <div className={`group relative ${aspect} rounded-lg overflow-hidden bg-secondary border border-border hover:border-primary/40 transition-all duration-500`}>
-        {embedSrc ? (
-          <iframe
-            src={embedSrc}
-            title={video.title}
-            className="absolute inset-0 w-full h-full"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        ) : video.thumbnail_url ? (
+      <div
+        onClick={() => playable && onPlay(video)}
+        className={`group relative ${aspect} rounded-lg overflow-hidden bg-secondary border border-border hover:border-primary/40 transition-all duration-500 ${playable ? "cursor-pointer" : ""}`}
+      >
+        {video.thumbnail_url ? (
           <img
             src={video.thumbnail_url}
             alt={video.title}
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-secondary to-card flex items-center justify-center">
-            <div className="w-14 h-14 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center">
-              <Play className="w-6 h-6 text-primary ml-0.5" />
-            </div>
-          </div>
+          <div className="absolute inset-0 bg-gradient-to-br from-secondary to-card" />
         )}
+        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+          <div className="w-14 h-14 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center group-hover:bg-primary/30 group-hover:scale-110 transition-all duration-300">
+            <Play className="w-6 h-6 text-primary ml-0.5" />
+          </div>
+        </div>
       </div>
       <div className="mt-3 px-1">
         <h3 className="text-sm font-display tracking-wider text-foreground">{video.title}</h3>
@@ -93,6 +100,7 @@ const VideoCard = ({ video, aspect, index }: { video: Video; aspect: string; ind
 const VideoGrid = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [active, setActive] = useState<Video | null>(null);
 
   useEffect(() => {
     supabase
@@ -113,6 +121,9 @@ const VideoGrid = () => {
     ? videos.filter((v) => v.type === "regular")
     : fallbackRegular;
 
+  const activeEmbed = active?.embed_url ? getEmbedSrc(active.embed_url) : null;
+  const isReel = active?.type === "reel";
+
   return (
     <section id="work" className="relative py-24 px-6">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
@@ -132,7 +143,7 @@ const VideoGrid = () => {
         </ScrollReveal>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 mb-20">
           {reels.map((video, i) => (
-            <VideoCard key={video.id} video={video} aspect="aspect-[9/16]" index={i} />
+            <VideoCard key={video.id} video={video} aspect="aspect-[9/16]" index={i} onPlay={setActive} />
           ))}
         </div>
 
@@ -142,10 +153,43 @@ const VideoGrid = () => {
         </ScrollReveal>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {regular.map((video, i) => (
-            <VideoCard key={video.id} video={video} aspect="aspect-video" index={i} />
+            <VideoCard key={video.id} video={video} aspect="aspect-video" index={i} onPlay={setActive} />
           ))}
         </div>
       </div>
+
+      {/* Floating Video Player */}
+      <Dialog open={!!active} onOpenChange={(o) => !o && setActive(null)}>
+        <DialogContent
+          className={`p-0 bg-black border-border overflow-hidden ${
+            isReel ? "max-w-[420px] w-[92vw]" : "max-w-5xl w-[95vw]"
+          }`}
+        >
+          <div className={`relative w-full ${isReel ? "aspect-[9/16]" : "aspect-video"}`}>
+            {activeEmbed ? (
+              <iframe
+                src={activeEmbed}
+                title={active?.title || "Video"}
+                className="absolute inset-0 w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm">
+                Video unavailable
+              </div>
+            )}
+          </div>
+          {active && (
+            <div className="px-5 py-4 bg-card border-t border-border">
+              <h3 className="text-sm font-display tracking-wider text-foreground">{active.title}</h3>
+              {active.description && (
+                <p className="text-xs text-muted-foreground mt-1">{active.description}</p>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
