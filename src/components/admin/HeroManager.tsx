@@ -65,6 +65,7 @@ const HeroManager = () => {
 
       const updatedSettings = { ...settings };
       if (profileUrl) updatedSettings.profile_photo_url = profileUrl;
+      updatedSettings.hero_tags = JSON.stringify(tags);
 
       for (const [key, value] of Object.entries(updatedSettings)) {
         await supabase
