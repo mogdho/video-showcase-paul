@@ -42,6 +42,7 @@ const HeroSection = () => {
           if (row.value) settingsMap[row.key] = row.value;
         });
         setSettings((prev) => ({ ...prev, ...settingsMap }));
+        if (settingsMap.hero_tags) setTags(parseHeroTags(settingsMap.hero_tags));
       }
 
       if (statsRes.data && statsRes.data.length > 0) {
