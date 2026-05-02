@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { LogOut, Home, Video, User, BarChart3, Sparkles, MessageSquare, Link } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VideoManager from "@/components/admin/VideoManager";
+import ShowreelManager from "@/components/admin/ShowreelManager";
 import HeroManager from "@/components/admin/HeroManager";
 import StatsManager from "@/components/admin/StatsManager";
 import SkillsManager from "@/components/admin/SkillsManager";
@@ -154,6 +155,10 @@ const AdminPanel = () => {
               <Sparkles className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Skills</span>
             </TabsTrigger>
+            <TabsTrigger value="showreel" className="flex items-center gap-1.5 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <Video className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Showreel</span>
+            </TabsTrigger>
             <TabsTrigger value="videos" className="flex items-center gap-1.5 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
               <Video className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Videos</span>
@@ -171,6 +176,7 @@ const AdminPanel = () => {
           <TabsContent value="hero"><HeroManager /></TabsContent>
           <TabsContent value="stats"><StatsManager /></TabsContent>
           <TabsContent value="skills"><SkillsManager /></TabsContent>
+          <TabsContent value="showreel"><ShowreelManager /></TabsContent>
           <TabsContent value="videos"><VideoManager /></TabsContent>
           <TabsContent value="reviews"><ReviewsManager /></TabsContent>
           <TabsContent value="links"><LinksManager /></TabsContent>
