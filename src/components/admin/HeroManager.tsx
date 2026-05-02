@@ -18,6 +18,7 @@ const HeroManager = () => {
   const [saving, setSaving] = useState(false);
   const [profileFile, setProfileFile] = useState<File | null>(null);
   const [profilePreview, setProfilePreview] = useState("");
+  const [tags, setTags] = useState<HeroTag[]>(defaultHeroTags);
 
   useEffect(() => {
     fetchSettings();
